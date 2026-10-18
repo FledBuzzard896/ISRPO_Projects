@@ -17,14 +17,45 @@ namespace ISRPO_Projects.Classes
         }
 
 
+        // 1. GET /todos?userId={id}
         public async Task<List<TODO>> GetTodosByUserId(int userId)
         {
-            return await _client.GetFromJsonAsync<List<TODO>>($"$\"todos?userId={{userId}}\"");
+            return await _client.GetFromJsonAsync<List<TODO>>($"todos?userId={userId}");
         }
 
-        public async Task<TODO> GetTaskByTaskId(int taskId) 
+        // 2. GET /todos/{id}
+        public async Task<TODO> GetTaskByTaskId(int taskId)
         {
-            return await _client.GetFromJsonAsync<TODO>($"$\"/todos/{{id}}\"");
+            return await _client.GetFromJsonAsync<TODO>($"todos/{taskId}");
+        }
+
+        // 3. POST /todos
+        public async Task<TODO> CreateTask(TODO task)
+        {
+            var response = await _client.PostAsJsonAsync("todos", task);
+
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<TODO>();
+        }
+
+        // 4. PATCH /todos/{id}
+        public async Task<TODO> UpdateTaskStatus(int taskId, bool completed)
+        {
+            var patchData = new { Completed = completed };
+
+            var response = await _client.PatchAsJsonAsync($"todos/{taskId}", patchData);
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<TODO>();
+        }
+
+        // 5. DELETE /todos/{id}
+        public async Task<bool> DeleteTask(int taskId)
+        {
+            var response = await _client.DeleteAsync($"todos/{taskId}");
+
+            return response.IsSuccessStatusCode;
         }
     }
 }
