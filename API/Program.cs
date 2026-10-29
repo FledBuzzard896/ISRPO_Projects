@@ -1,11 +1,10 @@
+//Билдер, для инициализации API. К нему происходит подключение сервисов. (БД, Авторизация)
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// Создание экземпляра API
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
